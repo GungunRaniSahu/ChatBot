@@ -6,19 +6,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 body {
   font-family: 'Inter', sans-serif;
-  background-color: #fffafc; /* blush cream */
+  background: linear-gradient(135deg, #fce4ec, #e0c3fc);
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
+  padding: 10px;
 }
 
 .chat-wrapper {
@@ -31,10 +26,11 @@ body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  position: relative;
 }
 
 header {
-  background-color: #fce4ec; /* soft pink header */
+  background-color: #fce4ec;
   padding: 16px;
   font-size: 1.25rem;
   font-weight: 600;
@@ -53,30 +49,46 @@ header {
   background-color: #fffafc;
 }
 
+/* Message Styles */
 .message {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
   max-width: 80%;
-  padding: 12px 16px;
-  border-radius: 20px;
-  font-size: 15px;
-  line-height: 1.5;
-  position: relative;
-  word-wrap: break-word;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
   animation: fadeIn 0.3s ease-in-out;
 }
 
-.user {
+.message.user {
   align-self: flex-end;
-  background: #f7cfe6; /* blush pink */
-  color: #fff;
-  border-bottom-right-radius: 4px;
+  flex-direction: row-reverse;
 }
 
-.bot {
+.message.bot {
   align-self: flex-start;
-  background: #fef1f6; /* super light pink */
+}
+
+.bubble {
+  background-color: #f7cfe6;
+  padding: 12px 16px;
+  border-radius: 18px;
+  border-bottom-right-radius: 4px;
+  color: #fff;
+  position: relative;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.message.bot .bubble {
+  background-color: #fef1f6;
   color: #4b2c3e;
   border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 18px;
+}
+
+.message.user .bubble {
+  background-color: #eac7f4;
+  color: #4b2c3e;
+  border-bottom-right-radius: 4px;
+  border-bottom-left-radius: 18px;
 }
 
 .timestamp {
@@ -85,6 +97,30 @@ header {
   color: #9c8a95;
 }
 
+/* Avatars */
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background-size: cover;
+  background-position: center;
+}
+
+.avatar.user {
+  background-image: url('https://cdn-icons-png.flaticon.com/512/924/924915.png');
+}
+
+
+
+
+
+
+.avatar.bot {
+  background-image: url('https://cdn-icons-png.flaticon.com/512/4712/4712101.png');
+}
+
+/* Input Area */
 .input-area {
   display: flex;
   padding: 12px;
@@ -107,7 +143,7 @@ button {
   margin-left: 10px;
   padding: 10px 16px;
   font-size: 14px;
-  background-color: #f48fb1; /* soft blush */
+  background-color: #f48fb1;
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -116,8 +152,57 @@ button {
 }
 
 button:hover {
-  background-color: #ec407a; /* deeper pink */
+  background-color: #ec407a;
 }
+
+.download-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  z-index: 10;
+  outline: none;
+  box-shadow: none;
+}
+
+.download-btn:hover,
+.download-btn:focus,
+.download-btn:active {
+  background: none !important;
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.download-btn img {
+  width: 22px;
+  height: 22px;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+}
+
+
+.header-icon {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  outline: none;
+}
+
+.header-icon:hover {
+  background: none !important;
+  border: none !important;
+  outline: none !important;
+  filter: none;
+  opacity: 1;
+}
+
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(4px); }
@@ -132,67 +217,86 @@ button:hover {
 }
 
 </style>
-
 </head>
 <body>
-    <div class="chat-wrapper">
-      <header>ZiZi Chatbot 🤖</header>
-      <div class="chat-container" id="chat"></div>
-      <div class="input-area">
-        <input type="text" id="userInput" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendMessage()">
-        <button onclick="sendMessage()">Send</button>
-      </div>
+  <div class="chat-wrapper">
+    <header>
+        <span>ZiZi Chatbot 💬</span>
+        <button class="download-btn" onclick="downloadChat()" title="Download Chat">
+          <img src="https://cdn-icons-png.flaticon.com/512/786/786205.png
+
+
+
+
+
+
+
+          " alt="Download" />
+        </button>
+      </header>
+      
+          <div class="chat-container" id="chat"></div>
+    <div class="input-area">
+      <input type="text" id="userInput" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendMessage()">
+      <button onclick="sendMessage()">Send</button>
     </div>
+  </div>
   
-    <script>
-      const chatHistory = [];
   
-      function appendMessage(content, role, time) {
-        const chat = document.getElementById('chat');
-        const message = document.createElement('div');
-        message.className = `message ${role}`;
-        message.innerHTML = `
+  <script>
+    const chatHistory = [];
+
+    function appendMessage(content, role, time) {
+      const chat = document.getElementById('chat');
+      const message = document.createElement('div');
+      message.className = `message ${role}`;
+
+      message.innerHTML = `
+        <div class="avatar ${role}"></div>
+        <div class="bubble">
           ${content}
           <div class="timestamp">${time}</div>
-        `;
-        chat.appendChild(message);
-        chat.scrollTop = chat.scrollHeight;
-        chatHistory.push(`[${time}] ${role.toUpperCase()}: ${content.replace(/\n/g, ' ')}`);
+        </div>
+      `;
+
+      chat.appendChild(message);
+      chat.scrollTop = chat.scrollHeight;
+      chatHistory.push(`[${time}] ${role.toUpperCase()}: ${content.replace(/\n/g, ' ')}`);
+    }
+
+    async function sendMessage() {
+      const input = document.getElementById('userInput');
+      const message = input.value.trim();
+      if (!message) return;
+
+      appendMessage(message, 'user', new Date().toLocaleTimeString());
+      input.value = '';
+
+      try {
+        const response = await fetch('/get', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message })
+        });
+
+        const data = await response.json();
+        appendMessage(data.response, 'bot', data.time);
+      } catch (error) {
+        appendMessage("Oops, something went wrong.", 'bot', new Date().toLocaleTimeString());
       }
-  
-      async function sendMessage() {
-        const input = document.getElementById('userInput');
-        const message = input.value.trim();
-        if (!message) return;
-  
-        appendMessage(message, 'user', new Date().toLocaleTimeString());
-        input.value = '';
-  
-        try {
-          const response = await fetch('/get', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message })
-          });
-  
-          const data = await response.json();
-          appendMessage(data.response, 'bot', data.time);
-        } catch (error) {
-          appendMessage("Oops, something went wrong.", 'bot', new Date().toLocaleTimeString());
-        }
-      }
-  
-      function downloadChat() {
-        const blob = new Blob([chatHistory.join('\n\n')], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'chat-history.txt';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-      }
-    </script>
-  </body>
-  </html>
+    }
+
+    function downloadChat() {
+      const blob = new Blob([chatHistory.join('\n\n')], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'chat-history.txt';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
+  </script>
+</body>
+</html>
