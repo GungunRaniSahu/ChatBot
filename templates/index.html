@@ -209,6 +209,44 @@ button:hover {
   }
 }
 
+
+.typing-indicator {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+  height: 20px;
+  gap: 5px;
+  padding: 10px 0;
+}
+
+.typing-indicator span {
+  width: 8px;
+  height: 8px;
+  background-color: #b78ba1;
+  border-radius: 50%;
+  animation: typing 1s infinite ease-in-out;
+}
+
+.typing-indicator span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-indicator span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes typing {
+  0%, 80%, 100% {
+    transform: scale(0.6);
+    opacity: 0.3;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+
 </style>
 </head>
 <body>
@@ -229,6 +267,10 @@ button:hover {
       </header>
       
           <div class="chat-container" id="chat"></div>
+          <div id="typingIndicator" class="typing-indicator" style="display: none;">
+            <span></span><span></span><span></span>
+          </div>
+          
     <div class="input-area">
       <input type="text" id="userInput" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendMessage()">
       <button onclick="sendMessage()">Send</button>
@@ -266,6 +308,7 @@ button:hover {
       input.value = '';
 
       try {
+        document.getElementById('typingIndicator').style.display = 'flex';
         const response = await fetch('/get', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -273,8 +316,10 @@ button:hover {
         });
 
         const data = await response.json();
+        document.getElementById('typingIndicator').style.display = 'none';
         appendMessage(data.response, 'bot', data.time);
       } catch (error) {
+        document.getElementById('typingIndicator').style.display = 'none';
         appendMessage("Oops, something went wrong.", 'bot', new Date().toLocaleTimeString());
       }
     }
