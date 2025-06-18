@@ -56,7 +56,9 @@ header {
   align-items: flex-end;
   gap: 10px;
   max-width: 80%;
-  animation: fadeIn 0.3s ease-in-out;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeIn 0.4s forwards ease-out;
 }
 
 .message.user {
@@ -207,9 +209,12 @@ button:hover {
 
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
+
 
 @media (max-width: 500px) {
   .chat-wrapper {
